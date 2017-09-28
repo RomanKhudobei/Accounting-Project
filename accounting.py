@@ -1,7 +1,7 @@
 import time
 from pprint import pprint
 
-database = {}
+DATABASE = {}   # Data base to store accounting information
 
 # account is special, if it doesn't have sub_account
 SPECIAL_ACCOUNTS = ('01', '03', '05', '06', '08', '09', '22', '23', '24',
@@ -65,7 +65,7 @@ def check_valid_account(account):
         # to raise error with message
         assert account in SPECIAL_ACCOUNTS, 'You entered invalid account.'
 
-def check_in(account, start_remainder=0):
+def check_in(database, account, start_remainder=0):
     '''Check out if account already in database 
     and if it's not - creates data structure for it.
     '''
@@ -100,18 +100,18 @@ def check_in(account, start_remainder=0):
                 })
         return account, sub_account
 
-def set_start_remainder(account, start_remainder):
+def set_start_remainder(database, account, start_remainder):
     '''Rewrites start_remainder, even if it already exist.'''
-    account, sub_account = check_in(account)
+    account, sub_account = check_in(database, account)
     if sub_account == None:
         database[account]['start_remainder'] = start_remainder
     else:
         database[account][sub_account]['start_remainder'] = start_remainder
 
-def add_debit_operation(number, debit, amount, description):
+def add_debit_operation(database, number, debit, amount, description):
     '''Adds operation to debit account. If it's already exist - 
     rewrites it.'''
-    account, sub_account = check_in(debit)
+    account, sub_account = check_in(database, debit)
     if sub_account == None:
         database[account]['debit'].update({
             number: {
@@ -127,10 +127,10 @@ def add_debit_operation(number, debit, amount, description):
             }
         })
 
-def add_credit_operation(number, credit, amount, description):
+def add_credit_operation(database, number, credit, amount, description):
     '''Adds operation to credit account. If it's already exist -
     rewrites it.'''
-    account, sub_account = check_in(credit)
+    account, sub_account = check_in(database, credit)
     if sub_account == None:
         database[account]['credit'].update({
             number: {
@@ -146,7 +146,7 @@ def add_credit_operation(number, credit, amount, description):
             }
         })
 
-def add_operation(number, debit, credit, amount, description=None):
+def add_operation(database, number, debit, credit, amount, description=None):
     '''Adds operation to accounting database.'''
     assert type(number) == str, 'Number of operation has to be a str type.'
     assert type(description) == str or description == None, 'Description has to be a str type'
@@ -155,12 +155,13 @@ def add_operation(number, debit, credit, amount, description=None):
     try:
         int(number)
     except:
+        # to throw an error
         assert str == int, 'Number of operation has to be number str type.'
 
-    add_debit_operation(number, debit, amount, description)
-    add_credit_operation(number, credit, amount, description)
+    add_debit_operation(database, number, debit, amount, description)
+    add_credit_operation(database, number, credit, amount, description)
 
-def calculate_debit_turnover(account, sub_account=None):
+def calculate_debit_turnover(database, account, sub_account=None):
     '''The summ of all debit/credit operations is called turnover.
     This function calculate debit turnover.'''
     if account in database:  # additional checking for case if function invoked alone
@@ -177,7 +178,7 @@ def calculate_debit_turnover(account, sub_account=None):
                     turnover = turnover + operations[operation]['amount']
                 return turnover
 
-def calculate_credit_turnover(account, sub_account=None):
+def calculate_credit_turnover(database, account, sub_account=None):
     '''The summ of all debit/credit operations is called turnover.
     This function calculate credit turnover.'''
     if account in database:  # additional checking for case if function invoked alone
@@ -198,18 +199,18 @@ def calculate_credit_turnover(account, sub_account=None):
 
                 return turnover
 
-def sumbit_turnover():
+def sumbit_turnover(database):
     '''Caltulates and sets debit/credit turnover for each account.'''
     for account in database:
         if account in SPECIAL_ACCOUNTS:
-            database[account]['debit']['turnover'] = calculate_debit_turnover(account, None)
-            database[account]['credit']['turnover'] = calculate_credit_turnover(account, None)
+            database[account]['debit']['turnover'] = calculate_debit_turnover(database, account, None)
+            database[account]['credit']['turnover'] = calculate_credit_turnover(database, account, None)
         else:
             for sub_account in database[account]:
-                database[account][sub_account]['debit']['turnover'] = calculate_debit_turnover(account, sub_account)
-                database[account][sub_account]['credit']['turnover'] = calculate_credit_turnover(account, sub_account)
+                database[account][sub_account]['debit']['turnover'] = calculate_debit_turnover(database, account, sub_account)
+                database[account][sub_account]['credit']['turnover'] = calculate_credit_turnover(database, account, sub_account)
 
-def sumbit_end_remainder():
+def sumbit_end_remainder(database):
     '''Calculates and sets end remainder for each account.'''
     for account in database:
         if account in SPECIAL_ACCOUNTS:
@@ -240,7 +241,7 @@ def sumbit_end_remainder():
 
 
 
-def test_check_in():
+def test_check_in(database):
     
     accounts = ['101', '131', '201', '207', '23', '26', '301', '311', '372', '377', 
                 '39', '401', '441', '471', '601', '631', '641', '651', '661', '685']
@@ -252,10 +253,10 @@ def test_check_in():
     assert len(accounts) == len(start_remainders)
 
     for index in range(0, len(accounts)):
-        check_in(accounts[index], start_remainders[index])
+        check_in(database, accounts[index], start_remainders[index])
 
      
-def test_add_operation():
+def test_add_operation(database):
     
     operations = [str(x) for x in range(1, 50)]
 
@@ -280,10 +281,10 @@ def test_add_operation():
     assert len(operations) == len(deb_accounts) == len(cred_accounts) == len(amounts)
 
     for index in range(0, len(operations)):
-        add_operation(operations[index], deb_accounts[index], cred_accounts[index], amounts[index])
+        add_operation(database, operations[index], deb_accounts[index], cred_accounts[index], amounts[index])
 
 
-def test_function():    # compare summs of all deb and cred turnovers. Have to be the same.
+def test_function(database):    # compare summs of all deb and cred turnovers. Have to be the same.
     deb_turnover = 0
     cred_turnonver = 0
     for account in database:
@@ -298,11 +299,11 @@ def test_function():    # compare summs of all deb and cred turnovers. Have to b
 
 
 t = time.time()
-test_check_in()
-test_add_operation()
-sumbit_turnover()
-sumbit_end_remainder()
-test_function()
+test_check_in(DATABASE)
+test_add_operation(DATABASE)
+sumbit_turnover(DATABASE)
+sumbit_end_remainder(DATABASE)
+test_function(DATABASE)
 print(time.time() - t)
 
-pprint(database)
+pprint(DATABASE)

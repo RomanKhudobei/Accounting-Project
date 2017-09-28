@@ -1,0 +1,7 @@
+In second semester of fourth course in college I had accounting as minor. Learning any computer programms wasn't in educational plan.
+It was just accounting theory and we wrote it manually by "planes". It's tables for each account with two columns: 
+debit and credit accordinly. Also there was a tricky thing with positive and negative accounts, but that details.
+We might do one exercise whole lesson and didn't solve it, 'cause you had to do bunch of work. This unefficient way made me merge,
+and I decided to wrote my own programm that will do that bunch of work. Of course, at first I wrote code somehow, 'cause didn't have
+a lot of free time (final course, second semester, come on...). But, after graduate, I wrote code in better way. So, you can
+see result in nearby file.

@@ -1,7 +1,65 @@
-In second semester of fourth course in college I had accounting as minor. Learning any computer programms wasn't in educational plan.
+   In second semester of fourth course in college I had accounting as minor. Learning any computer programms wasn't in educational plan.
 It was just accounting theory and we wrote it manually by "planes". It's tables for each account with two columns: 
 debit and credit accordinly. Also there was a tricky thing with positive and negative accounts, but that details.
 We might do one exercise whole lesson and didn't solve it, 'cause you had to do bunch of work. This unefficient way made me merge,
 and I decided to wrote my own programm that will do that bunch of work. Of course, at first I wrote code somehow, 'cause didn't have
 a lot of free time (final course, second semester, come on...). But, after graduate, I wrote code in better way. So, you can
 see result in nearby file.
+   I know about inaccurateness of float numbers, but in exercises was only whole numbers, so I didn't care about that and in the
+case of exercises I think it's OK.
+
+Data structure, that I use looks like:
+
+DATABASE = {
+    <number of account str>: {
+        <number of sub-account str>: {
+            'start remainder': <number int>,
+            'debit': {
+                <number of operation 'str'>: {
+                    'amount': <number int>,
+                    'description': <description of operation str>
+                },
+                'turnover': <number int>
+            },
+            'credit': {
+                <number of operation 'str'>: {
+                    'amount': <number int>,
+                    'description': <description of operation str>
+                },
+                'turnover': <number int>
+            },
+            'end_remainder': <number int>
+        }
+    }
+}
+
+Example
+
+DATABASE = {
+    '30': {
+        '301': {
+            'start remainder': 2000,
+            'debit': {
+                '1': {
+                    'amount': 1000,
+                    'description': 'Some description'
+                },
+                'turnover': 1000
+            },
+            'credit': {
+                '2': {
+                    'amount': 500,
+                    'description': None
+                },
+                'turnover': 500
+            },
+            'end_remainder': 2500
+        },
+        '302': {
+            ...
+        }
+    },
+    '31': {
+        ...
+    }
+}

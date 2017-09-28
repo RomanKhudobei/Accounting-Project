@@ -1,3 +1,6 @@
+import time
+from pprint import pprint
+
 database = {}
 
 # account is special, if it doesn't have sub_account
@@ -219,9 +222,8 @@ def sumbit_end_remainder():
             end_remainder = start_remainder + debit_turnover - credit_turnover
             database[account]['end_remainder'] = end_remainder
         else:
-            assert 'turnover' in database[account][sub_account]['debit']
-
             for sub_account in database[account]:
+                assert 'turnover' in database[account][sub_account]['debit'], 'You have to invoke sumbit_turnover at first.'
 
                 start_remainder = database[account][sub_account]['start_remainder']
                 debit_turnover = database[account][sub_account]['debit']['turnover']
@@ -229,3 +231,78 @@ def sumbit_end_remainder():
 
                 end_remainder = start_remainder + debit_turnover - credit_turnonver
                 database[account][sub_account]['end_remainder'] = end_remainder
+
+
+
+
+""" If you want to look up how it works, you can use following code """
+
+
+
+
+def test_check_in():
+    
+    accounts = ['101', '131', '201', '207', '23', '26', '301', '311', '372', '377', 
+                '39', '401', '441', '471', '601', '631', '641', '651', '661', '685']
+
+    start_remainders = [590000, 120000, 95000, 6000, 10000, 7000, 150, 10350, 500, 
+                        10000, 5000, 540000, 15000, 2000, 14000, 17000, 5000, 4000, 
+                        15000, 2000]
+
+    assert len(accounts) == len(start_remainders)
+
+    for index in range(0, len(accounts)):
+        check_in(accounts[index], start_remainders[index])
+
+     
+def test_add_operation():
+    
+    operations = [str(x) for x in range(1, 50)]
+
+    deb_accounts = ['101', '92', '131', '972', '311', '79', '701', '79', '201', '201', 
+                    '201', '311', '23', '23', '23', '92', '23', '23', '92', '23', 
+                    '92', '471', '661', '92', '92', '92', '26', '361', '701', '311', 
+                    '311', '901', '701', '301', '661', '372', '98', '311', '641', 
+                    '631', '631', '651', '685', '601', '684', '79', '79', '79', '79']
+
+    cred_accounts = ['401','131','101','101','701','972','79','441','631','631',
+                     '631','601','201','201','201','201','471','661','661','651',
+                     '651','661','641','207','372','39','23','701','641','361',
+                     '377','26','79','311','301','301','641','641','311','311',
+                     '311','311','311','311','311','92','98','901','441']
+
+    amounts = [30000,6700,500,1000,2000,1000,2000,1000,82500,30000,7500,27000,
+               105000,35000,2000,15000,3000,30000,12000,11250,4500,2000,4500,
+               500,200,1200,177400,265213,34594,265213,3000,177400,230619,43000,
+               42000,200,10644,6800,4500,120000,12500,4000,1000,27000,2700,40100,
+               10644,177400,0]
+
+    assert len(operations) == len(deb_accounts) == len(cred_accounts) == len(amounts)
+
+    for index in range(0, len(operations)):
+        add_operation(operations[index], deb_accounts[index], cred_accounts[index], amounts[index])
+
+
+def test_function():    # compare summs of all deb and cred turnovers. Have to be the same.
+    deb_turnover = 0
+    cred_turnonver = 0
+    for account in database:
+        if account in SPECIAL_ACCOUNTS:
+            deb_turnover += database[account]['debit']['turnover']
+            cred_turnonver += database[account]['credit']['turnover']
+        else:
+            for sub_account in database[account]:
+                deb_turnover += database[account][sub_account]['debit']['turnover']
+                cred_turnonver += database[account][sub_account]['credit']['turnover']
+    print((deb_turnover, cred_turnonver))
+
+
+t = time.time()
+test_check_in()
+test_add_operation()
+sumbit_turnover()
+sumbit_end_remainder()
+test_function()
+print(time.time() - t)
+
+pprint(database)

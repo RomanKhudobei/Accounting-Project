@@ -185,18 +185,14 @@ def calculate_credit_turnover(database, account, sub_account=None):
         turnover = 0
         if account in SPECIAL_ACCOUNTS:
             operations = database[account]['credit']
-
             for operation in operations:
                 turnover = turnover + operations[operation]['amount']
-
             return turnover
         else:
             if sub_account in database[account]:
                 operations = database[account][sub_account]['credit']
-
                 for operation in operations:
                     turnover = turnover + operations[operation]['amount']
-
                 return turnover
 
 def sumbit_turnover(database):

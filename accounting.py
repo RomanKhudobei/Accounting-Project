@@ -66,6 +66,8 @@ def check_valid_account(account):
 def check_in(database, account, start_remainder=0):
     '''Check out if account already in database 
     and if it's not - creates data structure for it.
+    Returns:
+        number of account, sub_account (str type).
     '''
     check_valid_account(account)
     if account in SPECIAL_ACCOUNTS:

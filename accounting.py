@@ -46,9 +46,7 @@ VALID_ACCOUNTS = ('100', '101', '102', '103', '104', '105', '106', '107',
                   '022', '023', '024', '025', '041', '042', '071', '072')
 
 def check_valid_account(account):
-    '''Checks account. If it's not valid - throw according exception.
-    Returns:
-        account and sub_account numbers str type. (if exists else None)'''
+    '''Checks account. If it's not valid - throw according exception.'''
     assert type(account) == str, 'Account has to be str type.'
 
     try:

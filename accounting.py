@@ -49,14 +49,7 @@ def check_valid_account(account):
     '''Checks account. If it's not valid - throw according exception.'''
     assert type(account) == str, 'Account has to be str type.'
     assert account.isdigit() == True, 'Account has to be a number str type.'
-    
-    if account in SPECIAL_ACCOUNTS:
-        pass
-    elif account in VALID_ACCOUNTS:
-        pass
-    else:
-        # to raise error with message
-        assert account in SPECIAL_ACCOUNTS, 'You entered invalid account.'
+    assert account in SPECIAL_ACCOUNTS or account in VALID_ACCOUNTS, 'You entered invalid account.'
 
 def check_in(database, account, start_remainder=0):
     '''Check out if account already in database 

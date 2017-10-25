@@ -48,13 +48,8 @@ VALID_ACCOUNTS = ('100', '101', '102', '103', '104', '105', '106', '107',
 def check_valid_account(account):
     '''Checks account. If it's not valid - throw according exception.'''
     assert type(account) == str, 'Account has to be str type.'
-
-    try:
-        int(account)
-    except:
-        # to raise error with message
-        assert str == int, 'Account should be a number str type.'
-
+    assert account.isdigit() == True, 'Account has to be a number str type.'
+    
     if account in SPECIAL_ACCOUNTS:
         pass
     elif account in VALID_ACCOUNTS:

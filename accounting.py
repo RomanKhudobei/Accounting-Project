@@ -137,14 +137,11 @@ def add_credit_operation(database, number, credit, amount, description):
 def add_operation(database, number, debit, credit, amount, description=None):
     '''Adds operation to accounting database.'''
     assert type(number) == str, 'Number of operation has to be a str type.'
-    assert type(description) == str or description == None, 'Description has to be a str type'
+    assert type(description) == str or description == None, 'Description has to be a str type.'
+    assert type(amount) == int or type(amount) == float, 'Amount should be int or float type.'
     assert amount >= 0, 'Amount has to be greater or equal to zero.'
-
-    try:
-        int(number)
-    except:
-        # to throw an error
-        assert str == int, 'Number of operation has to be number str type.'
+    assert debit.isdigit() == True, 'Number of account has to be number str type.'
+    assert credit.isdigit() == True, 'Number of account has to be number str type.'
 
     add_debit_operation(database, number, debit, amount, description)
     add_credit_operation(database, number, credit, amount, description)
